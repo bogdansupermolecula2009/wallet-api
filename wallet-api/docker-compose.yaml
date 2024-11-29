@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  wallet-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wallet-api
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://wallet-db:5435/wallet_db
+      SPRING_DATASOURCE_USERNAME: supermolecula
+      SPRING_DATASOURCE_PASSWORD: qwerty1
+    depends_on:
+      - wallet-db
+    volumes:
+      - ./target:/wallet-api/target
+
+  wallet-db:
+    image: postgres:14-alpine
+    container_name: wallet-db
+    environment:
+      POSTGRES_DB: wallet_db
+      POSTGRES_USER: supermolecula
+      POSTGRES_PASSWORD: qwerty1
+    ports:
+      - "5435:5432"
+    volumes:
+      - wallet-db-data:/var/lib/postgresql/data
+
+volumes:
+  wallet-db-data:
